@@ -1,0 +1,25 @@
+USE goit_database;
+
+SELECT id, date, YEAR(date) AS year, MONTH(date) AS month, DAY(date) AS day
+FROM orders;
+
+SELECT id, date, (date + INTERVAL 1 DAY) AS new_data
+FROM orders;
+
+SELECT id, date, TIMESTAMPDIFF(SECOND, date, NOW()) AS count_sec
+FROM orders;
+
+SELECT *
+FROM orders
+WHERE date BETWEEN "1996-07-10 00:00:00" AND "1996-10-08 00:00:00";
+
+
+CREATE TABLE json_table (id INT, date JSON);
+INSERT INTO json_table (id, date) SELECT id, JSON_OBJECT ("date", date) FROM orders;
+
+SELECT o.id, o.date, jt.id AS id_json, JSON_EXTRACT (jt.date, '$.date') AS json_date
+FROM orders o
+JOIN json_table jt ON o.id = jt.id;
+
+
+SELECT id, date, JSON_OBJECT ('id',id, 'date',date) AS json_object FROM orders;
